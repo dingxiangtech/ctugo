@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	engineConn = NewEngineConnection("127.0.0.1:7090", "testappid", "testappkey")
+	engineConn = NewEngineConnection("http://127.0.0.1:7090/ctu/event.do", "testappid", "testappkey")
 )
 
 func TestNewConn(t *testing.T) {

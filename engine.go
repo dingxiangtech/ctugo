@@ -61,10 +61,11 @@ type EngineConnection struct {
 // NewEngineConnection generate a new EngineConnection object
 func NewEngineConnection(host, appKey, appSecret string) *EngineConnection {
 	return &EngineConnection{
-		URLWithoutSign: fmt.Sprintf("http://%s/ctu/event.do?appKey=%s&version=1&sign=", host, appKey),
-		Host:           host,
-		AppKey:         appKey,
-		AppSecret:      appSecret,
+		Host:      host,
+		AppKey:    appKey,
+		AppSecret: appSecret,
+
+		URLWithoutSign: fmt.Sprintf("%s?appKey=%s&version=1&sign=", host, appKey),
 	}
 }
 
