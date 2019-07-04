@@ -1,6 +1,8 @@
 # ctugo
 golang SDK for ctu product
 
+[![Build Status](https://travis-ci.org/dingxiangtech/ctugo.svg?branch=master)](https://travis-ci.org/dingxiangtech/ctugo)
+
 ## Example
 
 ```go
