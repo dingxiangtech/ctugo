@@ -18,14 +18,14 @@ func TestNewConn(t *testing.T) {
 
 func TestGetSign(t *testing.T) {
 	Convey("get sign of one field", t, func() {
-		sign := engineConn.getSign("test_event", map[string]interface{}{
+		sign := engineConn.getSign("test_event", "test_event", map[string]interface{}{
 			"ip": "1.2.3.4",
 		})
 		So(sign, ShouldEqual, "5db1434d41ba1d8029de5abdde40060b")
 	})
 
 	Convey("get sign of multi fields", t, func() {
-		sign := engineConn.getSign("test_event", map[string]interface{}{
+		sign := engineConn.getSign("test_event", "test_event", map[string]interface{}{
 			"ip":      "1.2.3.4",
 			"email":   "a@b.c",
 			"user_id": "hello_world",
@@ -34,7 +34,7 @@ func TestGetSign(t *testing.T) {
 	})
 
 	Convey("get sign of non-string fields", t, func() {
-		sign := engineConn.getSign("test_event", map[string]interface{}{
+		sign := engineConn.getSign("test_event", "test_event", map[string]interface{}{
 			"ip":          "1.2.3.4",
 			"androidRoot": false,
 			"ratio":       1,
@@ -43,7 +43,7 @@ func TestGetSign(t *testing.T) {
 	})
 
 	Convey("get sign of null fields", t, func() {
-		sign := engineConn.getSign("test_event", map[string]interface{}{
+		sign := engineConn.getSign("test_event", "test_event", map[string]interface{}{
 			"ip":          nil,
 			"androidRoot": false,
 			"ratio":       1,
@@ -54,7 +54,7 @@ func TestGetSign(t *testing.T) {
 
 func TestGetData(t *testing.T) {
 	Convey("get data of single field", t, func() {
-		data, err := engineConn.getData("test_event", map[string]interface{}{
+		data, err := engineConn.getData("test_event", "test_event", map[string]interface{}{
 			"ip": "1.2.3.4",
 		})
 		So(err, ShouldEqual, nil)
@@ -65,7 +65,7 @@ func TestGetData(t *testing.T) {
 	})
 
 	Convey("get data of multi field", t, func() {
-		data, err := engineConn.getData("test_event", map[string]interface{}{
+		data, err := engineConn.getData("test_event", "test_event", map[string]interface{}{
 			"ip":          "1.2.3.4",
 			"androidRoot": true,
 		})
@@ -84,7 +84,7 @@ func BenchmarkGetData(b *testing.B) {
 		"ext_amount": 123,
 	}
 	for i := 0; i < b.N; i++ {
-		engineConn.getData("test_event", fields)
+		engineConn.getData("test_event", "test_event", fields)
 	}
 }
 
@@ -95,6 +95,6 @@ func BenchmarkGetSign(b *testing.B) {
 		"ext_amount": 123,
 	}
 	for i := 0; i < b.N; i++ {
-		engineConn.getSign("test_event", fields)
+		engineConn.getSign("test_event", "test_event", fields)
 	}
 }

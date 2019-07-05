@@ -70,14 +70,14 @@ func NewEngineConnection(host, appKey, appSecret string) *EngineConnection {
 }
 
 // CallRiskEngine is used to send request to ctu engine, and got EngineResponse and error
-func (e *EngineConnection) CallRiskEngine(eventCode string, fields map[string]interface{}) (*EngineResponse, error) {
-	data, err := e.getData(eventCode, fields)
+func (e *EngineConnection) CallRiskEngine(eventCode string, flag string, fields map[string]interface{}) (*EngineResponse, error) {
+	data, err := e.getData(eventCode, flag, fields)
 	if err != nil {
 		return nil, err
 	}
 
 	req := fasthttp.AcquireRequest()
-	req.SetRequestURI(e.URLWithoutSign + e.getSign(eventCode, fields))
+	req.SetRequestURI(e.URLWithoutSign + e.getSign(eventCode, flag, fields))
 	req.Header.SetMethod("POST")
 	req.Header.SetContentType("text/plain")
 	req.SetBody(data)
@@ -103,14 +103,14 @@ func (e *EngineConnection) CallRiskEngine(eventCode string, fields map[string]in
 	return result, nil
 }
 
-func (e *EngineConnection) getSign(eventCode string, fields map[string]interface{}) string {
+func (e *EngineConnection) getSign(eventCode string, flag string, fields map[string]interface{}) string {
 	data := signBufPool.Get().(*bytes.Buffer)
 	data.Reset()
 	data.WriteString(e.AppSecret)
 	data.WriteString("eventCode")
 	data.WriteString(eventCode)
 	data.WriteString("flag")
-	data.WriteString(eventCode)
+	data.WriteString(flag)
 
 	keys := make([]string, len(fields))
 	idx := 0
@@ -139,12 +139,12 @@ func (e *EngineConnection) getSign(eventCode string, fields map[string]interface
 	return hex.EncodeToString(sum[:])
 }
 
-func (e *EngineConnection) getData(eventCode string, fields map[string]interface{}) ([]byte, error) {
+func (e *EngineConnection) getData(eventCode string, flag string, fields map[string]interface{}) ([]byte, error) {
 	var data []byte
 	var err error
 
 	data, err = json.Marshal(map[string]interface{}{
-		"flag":      eventCode,
+		"flag":      flag,
 		"data":      fields,
 		"eventCode": eventCode,
 	})
